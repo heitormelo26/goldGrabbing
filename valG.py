@@ -6,7 +6,6 @@ contagem_reuso_dp = 0
 estados_reusados = {}
 estados_na_tabela = set()
 
-
 def valor(grafo: nx.Graph, pesos: Dict[int, int], profundidade=0) -> Tuple[int, list, list]:
     if not grafo.nodes:
         return 0, [], []
@@ -78,6 +77,25 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, profundidade=0, history=()
 
     return melhor_valor, arvore_decisao, melhor_caminho
 
+def calcular_ganhos(melhor_caminho, pesos):
+    ganho_ana = 0
+    ganho_bob = 0
+    vertices_ana = []
+    vertices_bob = []
+
+    for i, vertice in enumerate(melhor_caminho):
+        if i % 2 == 0:
+            ganho_ana += pesos[vertice]
+            vertices_ana.append(vertice)
+        else:
+            ganho_bob += pesos[vertice]
+            vertices_bob.append(vertice)
+
+    print("\nVértices escolhidos por Ana:", vertices_ana)
+    print("Ganho de Ana:", ganho_ana)
+    
+    print("\nVértices escolhidos por Bob:", vertices_bob)
+    print("Ganho de Bob:", ganho_bob)
 
 def eh_viavel(grafo: nx.Graph, v: int) -> bool:
     if len(grafo.nodes) == 1:

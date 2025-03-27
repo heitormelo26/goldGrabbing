@@ -53,6 +53,63 @@ def plotarArvoreDeDecisao(tree, comDp = True,parent_name='G', graph=None, pos=No
     return graph, pos, counter
 
 
+
+def plotar_grafo_bipartido(G, conjunto_x, conjunto_y, pesos, title="Grafo Bipartido com Pesos Aleatórios"):
+    """Plota um grafo bipartido organizado, com X à esquerda e Y à direita, e exibe os pesos nos vértices."""
+    plt.figure(figsize=(8, 6))
+    
+    pos = {}
+    x_offset = -1  # X fica na esquerda
+    y_offset = 1   # Y fica na direita
+    
+    for i, node in enumerate(conjunto_x):
+        pos[node] = (x_offset, i - len(conjunto_x) / 2)  # Alinhar verticalmente
+
+    for i, node in enumerate(conjunto_y):
+        pos[node] = (y_offset, i - len(conjunto_y) / 2)  # Alinhar verticalmente
+
+    nx.draw(G, pos, node_color="lightblue", node_size=1000, font_size=12)
+    
+    labels = {node: f"{node}\n({pesos[node]})" for node in G.nodes()}
+    nx.draw_networkx_labels(G, pos, labels, font_size=10, font_color="black")
+
+    plt.title(title)
+    plt.show()
+
+
+
+    
+def imprimirArvoreCompleta(G,pesos):
+    """Plota a árvore gerada com hierarquia de altura."""
+    pos = {}
+    nivel_map = {}  # Dicionário para armazenar a posição dos nós em cada nível
+
+    def definir_posicoes(nodo, x, y, delta_x, nivel_atual):
+        if nivel_atual not in nivel_map:
+            nivel_map[nivel_atual] = []
+        nivel_map[nivel_atual].append(x)
+        
+        pos[nodo] = (x, -y)
+        filhos = list(G.neighbors(nodo))
+        
+        # Remover o pai da lista de vizinhos (para evitar recursão infinita)
+        if nivel_atual > 0:
+            filhos = [f for f in filhos if f not in pos]
+
+        num_filhos = len(filhos)
+        if num_filhos > 0:
+            espacamento = delta_x / num_filhos
+            for i, filho in enumerate(filhos):
+                definir_posicoes(filho, x + (i - num_filhos // 2) * espacamento, y + 1, delta_x / 2, nivel_atual + 1)
+
+    definir_posicoes("v0", 0, 0, 4, 0)
+    labels = {node: f"{node} ({pesos[node]})" for node in G.nodes()}
+
+    plt.figure(figsize=(8, 6))
+    nx.draw(G, pos, with_labels=True,labels=labels, node_color="lightblue", node_size=1000, font_size=10, edge_color="gray")
+    plt.title("Árvore Completa com Hierarquia de Altura")
+    plt.show()
+
 def imprimirArvoreDecisao(arvore_decisao, comDP=True):
     arvore_plotada, pos, counter = plotarArvoreDeDecisao(arvore_decisao,comDP)
     plt.figure(figsize=(16, 12))
