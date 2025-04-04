@@ -54,10 +54,11 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, profundidade=0, history=()
         contagem_reuso_dp.append(estado)
 
         if estado not in estados_reusados:
-            estados_reusados[estado] = {'count': 0, 'timestamps': []}
+            estados_reusados[estado] = {'count': 0, 'timestamps': [],'historico': []}
 
         estados_reusados[estado]['count'] += 1
-        estados_reusados[estado]['timestamps'].append(timestamp)
+        estados_reusados[estado]['timestamps'].append(history)
+        estados_reusados[estado]['historico'].append(history)
 
         return memo[estado]
 
@@ -103,6 +104,7 @@ def valor_dp_otimizado_caminho(grafo: nx.Graph, pesos: dict, primeirosVerticesNa
     estado = tuple(grafo.nodes)
 
     if estado in memo:
+        print("REUSOOOOOOUUUUUUUUUUUUUUUUUUUU")
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         contagem_reuso_dp.append(estado)
 

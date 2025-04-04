@@ -110,10 +110,21 @@ def imprimirArvoreCompleta(G,pesos):
     plt.title("Árvore Completa com Hierarquia de Altura")
     plt.show()
 
-def imprimirArvoreDecisao(arvore_decisao, comDP=True):
-    arvore_plotada, pos, counter = plotarArvoreDeDecisao(arvore_decisao,comDP)
-    plt.figure(figsize=(16, 12))
-    nx.draw(arvore_plotada, pos, with_labels=True, node_color="lightblue", width=2, font_size=10)
+def imprimirArvoreDecisao(arvore_decisao, comDP=True, nome_arquivo="arvore_decisao.png"):
+    arvore_plotada, pos, counter = plotarArvoreDeDecisao(arvore_decisao, comDP)
+    plt.figure(figsize=(54, 36))  # Tamanho grande, ajuste se necessário
+    nx.draw(
+        arvore_plotada,
+        pos,
+        with_labels=True,
+        node_color="lightblue",
+        width=2,
+        font_size=10
+    )
     plt.title("Árvore de Decisão Final com Caminhos Hierárquicos")
+    
+    # Salvar como imagem PNG
+    plt.savefig(nome_arquivo, format="png", dpi=300, bbox_inches="tight")
+    
+    # Opcional: exibe a imagem
     plt.show()
-

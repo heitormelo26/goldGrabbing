@@ -10,32 +10,42 @@ def imprime_estados_reusados():
     
     for estado, info in estados_reusados.items():
         print(f"{estado} → reutilizado {info['count']} vezes")
+        print(f"Caminho percorrido: {info['historico']}")
+        print("  Momentos de reutilização:")
+        for  historico in info['historico']:
+            print(f" Historico:  {historico}")
         print("  Instantes de reutilização:")
-        for timestamp in info['timestamps']:
-            print(f"    - {timestamp}")
+        # for timestamp in info['timestamps']:
+        #     print(f"    - {timestamp}")
 
 
         
-def imprimirTabelaPd(soTamanho =  True):
-    """Imprime a tabela de programação dinâmica para análise da complexidade."""
-    len(tabela_dp)
-    qtdDeLinhas = 0 
-    print("\n Tabela de Programação Dinâmica:")
-    for estado, (resultados, _) in tabela_dp.items():
-        if(soTamanho == False):
-            print(f"Estado: {estado}")
-        for caminho, ganho_alice, ganho_bob in resultados:
-            qtdDeLinhas = qtdDeLinhas + 1
-            if(soTamanho == False):
-                print(f"  Caminho: {caminho} → Alice: {ganho_alice}, Bob: {ganho_bob}")
+# def imprimirTabelaPd(soTamanho =  True):
+#     """Imprime a tabela de programação dinâmica para análise da complexidade."""
+#     len(tabela_dp)
+#     qtdDeLinhas = 0 
+#     print("\n Tabela de Programação Dinâmica:")
+#     for estado, (resultados, _) in tabela_dp.items():
+#         if(soTamanho == False):
+#             print(f"Estado: {estado}")
+#         for caminho, ganho_alice, ganho_bob in resultados:
+#             qtdDeLinhas = qtdDeLinhas + 1
+#             if(soTamanho == False):
+#                 print(f"  Caminho: {caminho} → Alice: {ganho_alice}, Bob: {ganho_bob}")
 
-    print(f"\nTAMANHO DA TABELA: {qtdDeLinhas}" )
+#     print(f"\nTAMANHO DA TABELA: {qtdDeLinhas}" )
 
-def imprime_estados_nao_reutilizados():
-    estados_nao_reutilizados = estados_na_tabela - estados_reusados  # Diferença entre os conjuntos
+def imprime_estados_nao_reutilizados(memo):
     print("\nEstados NÃO reutilizados:")
-    for estado in estados_nao_reutilizados:
-        print(estado)
+    estados_nao_reutilizados = []
+    
+    for estado in memo.keys():
+        if estado not in estados_reusados:
+            estados_nao_reutilizados.append(estado)
+            melhor_valor, arvore_decisao, melhor_caminho = memo[estado]
+            print(f"Estado: {estado}")
+            print("-------------------------")
+    
     print(f"\nTotal de estados que nunca foram reutilizados: {len(estados_nao_reutilizados)}")
 
 
@@ -65,9 +75,10 @@ def imprime_tabela_dp(memo):
         print(f"Estado: {estado}")
         print(f"  Melhor valor: {melhor_valor}")
         print(f"  Melhor caminho: {melhor_caminho}")
-        
+
         if estado in estados_reusados:
             print(f"  Reutilizado {estados_reusados[estado]['count']} vezes")
+            print(f"Caminho percorrido: {estados_reusados[estado]['historico']}")
             print(f"  Instantes de reutilização: {estados_reusados[estado]['timestamps']}")
         else:
             print("  Nunca reutilizado")
