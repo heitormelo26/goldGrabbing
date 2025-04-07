@@ -42,7 +42,7 @@ def imprime_estados_nao_reutilizados(memo):
     for estado in memo.keys():
         if estado not in estados_reusados:
             estados_nao_reutilizados.append(estado)
-            melhor_valor, arvore_decisao, melhor_caminho = memo[estado]
+            melhor_valor, melhor_caminho = memo[estado]
             print(f"Estado: {estado}")
             print("-------------------------")
     
@@ -71,7 +71,7 @@ def contar_estados(grafo: nx.Graph) -> int:
 
 def imprime_tabela_dp(memo):
     print("\nTabela de Programação Dinâmica:")
-    for estado, (melhor_valor, arvore_decisao, melhor_caminho) in memo.items():
+    for estado, (melhor_valor, melhor_caminho) in memo.items():
         print(f"Estado: {estado}")
         print(f"  Melhor valor: {melhor_valor}")
         print(f"  Melhor caminho: {melhor_caminho}")
