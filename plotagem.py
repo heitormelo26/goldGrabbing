@@ -110,6 +110,40 @@ def imprimirArvoreCompleta(G,pesos):
     plt.title("Árvore Completa com Hierarquia de Altura")
     plt.show()
 
+def plotar_evolucao_memo(logs_memo, logs_memoKmn):
+    """
+    Plota a evolução do tamanho do memo ao longo do tempo para dois conjuntos de logs.
+    """
+    if not logs_memo and not logs_memoKmn:
+        print("Nenhum log de memória foi registrado.")
+        return
+
+    plt.figure(figsize=(10, 6))
+
+    if logs_memo:
+        tempos1, tamanhos1 = zip(*logs_memo)
+        plt.plot(tempos1, tamanhos1, marker='o', linestyle='-', label='Memo Padrão', color='blue')
+        pico1 = max(logs_memo, key=lambda x: x[1])
+        plt.annotate(f'Pico: {pico1[1]} bytes\n({pico1[0]:.2f}s)',
+                     xy=pico1, xytext=(pico1[0], pico1[1]*1.1),
+                     arrowprops=dict(facecolor='blue', shrink=0.05))
+
+    if logs_memoKmn:
+        tempos2, tamanhos2 = zip(*logs_memoKmn)
+        plt.plot(tempos2, tamanhos2, marker='s', linestyle='--', label='Memo KMN', color='green')
+        pico2 = max(logs_memoKmn, key=lambda x: x[1])
+        plt.annotate(f'Pico: {pico2[1]} bytes\n({pico2[0]:.2f}s)',
+                     xy=pico2, xytext=(pico2[0], pico2[1]*1.1),
+                     arrowprops=dict(facecolor='green', shrink=0.05))
+
+    plt.xlabel('Tempo decorrido (s)')
+    plt.ylabel('Tamanho do memo (bytes)')
+    plt.title('Evolução do uso de memória do memo')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
 def imprimirArvoreDecisao(arvore_decisao, comDP=True, nome_arquivo="arvore_decisao.png"):
     arvore_plotada, pos, counter = plotarArvoreDeDecisao(arvore_decisao, comDP)
     plt.figure(figsize=(54, 36))  # Tamanho grande, ajuste se necessário
