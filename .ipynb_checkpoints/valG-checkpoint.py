@@ -12,6 +12,8 @@ estados_timestamps = {}
 relacao = {}
 logs_memoKmn = []
 logs_memo = []
+qtd_estados_plot = []
+qtd_estados_plotKmn = []
 
 def gerar_reuso_estados(m, n):
     global relacao
@@ -28,7 +30,23 @@ def gerar_reuso_estados(m, n):
     print(resultado)
     relacao = resultado
 
+def registrar_qtdEstados_memoKmn(memo, inicio):
+    """
+    Registra o tempo decorrido e a quantidade real do memo.
+    """
+    tempo_decorrido = time.time() - inicio
+    tamanho = len(memo)
+    qtd_estados_plotKmn.append((tempo_decorrido, tamanho))
+    # Opcional: imprimir no log
 
+def registrar_qtdEstados(memo, inicio):
+    """
+    Registra o tempo decorrido e a quantidade real do memo.
+    """
+    tempo_decorrido = time.time() - inicio
+    tamanho = len(memo)
+    qtd_estados_plot.append((tempo_decorrido, tamanho))
+    # Opcional: imprimir no log
 
 def registrar_tamanho_memoKmn(memo, inicio):
     """
@@ -38,7 +56,6 @@ def registrar_tamanho_memoKmn(memo, inicio):
     tamanho = asizeof.asizeof(memo)
     logs_memoKmn.append((tempo_decorrido, tamanho))
     # Opcional: imprimir no log
-    print(f"[{tempo_decorrido:.4f} s] Tamanho do memo: {tamanho} bytes")
 
 def registrar_tamanho_memo(memo, inicio):
     """
@@ -48,7 +65,6 @@ def registrar_tamanho_memo(memo, inicio):
     tamanho = asizeof.asizeof(memo)
     logs_memo.append((tempo_decorrido, tamanho))
     # Opcional: imprimir no log
-    print(f"[{tempo_decorrido:.4f} s] Tamanho do memo: {tamanho} bytes")
 
 def limparVariaveisGlobais():
     global contagem_reuso_dp, estados_reusados, estados_na_tabela, estados_timestamps
@@ -94,7 +110,7 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, inicio_tempo= 0,profundida
 
     if estado in memo:
         registrar_tamanho_memo(memo, inicio_tempo)
-
+        registrar_qtdEstados(memo, inicio_tempo)
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         contagem_reuso_dp.append(estado)
 
@@ -124,6 +140,7 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, inicio_tempo= 0,profundida
 
             #arvore_decisao.append((v, valor_atual, sub_arvore_decisao))
             registrar_tamanho_memo(memo, inicio_tempo)
+            registrar_qtdEstados(memo, inicio_tempo)
             if valor_atual > melhor_valor:
                 melhor_valor = valor_atual
                 melhor_caminho = [v] + sub_melhor_caminho
@@ -147,12 +164,10 @@ def valor_dp_bipartido(grafo: nx.Graph, pesos: dict, memo=None,m =0 ,n = 0,inici
 
     if estado in memo:
         registrar_tamanho_memoKmn(memo, inicio_tempo)
-
+        registrar_qtdEstados_memoKmn(memo, inicio_tempo)
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         contagem_reuso_dp.append(estado)
-        print(f'Estado {estado} ')
         reusosRestantes = memo[estado][2] - 1 
-        print(f'Estado {estado} - reusos restantes: {reusosRestantes}')
         #memo[estado][2] = reusosRestantes
         valor, caminho, _ = memo[estado]
         memo[estado] = (valor, caminho, reusosRestantes)  
@@ -194,18 +209,16 @@ def valor_dp_bipartido(grafo: nx.Graph, pesos: dict, memo=None,m =0 ,n = 0,inici
                 melhor_valor = valor_atual
                 melhor_caminho = [v] + sub_melhor_caminho
             registrar_tamanho_memoKmn(memo, inicio_tempo)
+            registrar_qtdEstados_memoKmn(memo, inicio_tempo)
             if len(grafo.nodes) > 1 and len(grafo.nodes) < (m+n-1):
-                print("TAMANHO ESTADO: ",(len(grafo.nodes)))
                 n_reusos_max = relacao.get(len(grafo.nodes))
                 if estado in memo:
                 
                     valorAux = memo[estado][0]
                     if valorAux < melhor_valor:
-                        print(f"ESTADO ATUALIZADO {estado}")
                         memo[estado] = (melhor_valor, melhor_caminho, n_reusos_max)
                         estados_na_tabela.add(estado)
                 else:
-                    print(f"NOVO ESTADO CRIADO {estado}")
                     memo[estado] = (melhor_valor, melhor_caminho, n_reusos_max)
                     estados_na_tabela.add(estado)
                     
