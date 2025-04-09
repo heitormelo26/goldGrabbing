@@ -15,22 +15,27 @@ def estrategia_gulosa_ciclo(grafo, pesos):
         grafo_reduzido.remove_node(v)
         caminho = list(nx.dfs_preorder_nodes(grafo_reduzido))  # Transformando em caminho
         
-        bob_caminho, bob_pontuacao = bicoloracaoCaminho(grafo_reduzido, pesos)
-        ana_pontuacao = pesos[v]  # Ana pega apenas este vértice
+        bob_caminho, bob_pontuacao, ana_caminho, anaPontos = bicoloracaoCaminho(grafo_reduzido, pesos)
+        
+        ana_pontuacao = pesos[v] + anaPontos  # Ana pega apenas este vértice
         
         if ana_pontuacao > melhor_pontuacao:
             melhor_pontuacao = ana_pontuacao
             melhor_escolha = v
-            melhor_caminho = bob_caminho
+            melhor_caminho = ana_caminho
     
     # Ana faz a escolha ótima
-    grafo_final = grafo.copy()
-    grafo_final.remove_node(melhor_escolha)
-    caminhoEscolhido, ganho = bicoloracaoCaminho(grafo_final, pesos)
-    ganho += pesos[melhor_escolha]  # Somamos o peso do primeiro vértice escolhido por Ana
-    caminhoEscolhido.insert(0, melhor_escolha)  # Ana começa com esse vértice
+    #grafo_final = grafo.copy()
+    #grafo_final.remove_node(melhor_escolha)
+    #caminhoEscolhido, ganho = bicoloracaoCaminho(grafo_final, pesos)
+    #ganho += pesos[melhor_escolha]  # Somamos o peso do primeiro vértice escolhido por Ana
     
-    return caminhoEscolhido, ganho
+    print("melhor escolha: ",melhor_escolha)
+    print(melhor_caminho)
+    melhor_caminho.insert(0, melhor_escolha)  # Ana começa com esse vértice
+    print(melhor_caminho)
+    print(melhor_pontuacao)
+    return melhor_caminho, melhor_pontuacao
 
 
 def mainGulosoBicoloridoCiclo(grafo,pesos):
