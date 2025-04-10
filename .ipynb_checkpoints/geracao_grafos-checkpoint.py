@@ -33,7 +33,7 @@ def gerar_grafo_completo(n):
     return G, pesos
 
 def criar_grafo_bipartido(m, n):
-    """Cria um grafo bipartido com dois conjuntos de vértices de tamanhos m e n."""
+    """Cria um grafo bipartido com dois conjuntos de vértices de tamanhos m e n, garantindo que o grafo seja conexo."""
     G = nx.Graph()
     conjunto_x = [f"X{i}" for i in range(m)]  # Conjunto X
     conjunto_y = [f"Y{i}" for i in range(n)]  # Conjunto Y
@@ -41,17 +41,36 @@ def criar_grafo_bipartido(m, n):
     G.add_nodes_from(conjunto_x, bipartite=0)
     G.add_nodes_from(conjunto_y, bipartite=1)
     
-    # Adiciona arestas aleatórias entre os conjuntos
+    # Garantir conectividade: Conectando todos os vértices de X e Y
+    # Passo 1: Conectando aleatoriamente um vértice de X com um vértice de Y
+    x_random = random.choice(conjunto_x)
+    y_random = random.choice(conjunto_y)
+    G.add_edge(x_random, y_random)
+    
+    # Passo 2: Criando uma árvore para garantir que todos os vértices sejam alcançáveis
+    for i in range(1, m):
+        x = conjunto_x[i]
+        y = random.choice(conjunto_y)  # Conectar a um vértice de Y aleatoriamente
+        G.add_edge(x, y)
+    
+    for i in range(1, n):
+        y = conjunto_y[i]
+        x = random.choice(conjunto_x)  # Conectar a um vértice de X aleatoriamente
+        G.add_edge(x, y)
+    
+    # Passo 3: Adicionando arestas aleatórias entre os conjuntos para aumentar a complexidade
     for x in conjunto_x:
         for y in conjunto_y:
-            if random.random() > 0.5:  # Probabilidade de conexão
+            if random.random() > 0.5 and not G.has_edge(x, y):  # Evita arestas duplicadas
                 G.add_edge(x, y)
     
     # Atribui pesos aleatórios aos nós
     pesos = {node: random.randint(1, 10) for node in G.nodes()}
-    plotar_grafo_bipartido(G, conjunto_x, conjunto_y,pesos)
+    
+    # Função para visualizar o grafo (ajuste conforme sua necessidade)
+    plotar_grafo_bipartido(G, conjunto_x, conjunto_y, pesos)
+    
     return G, pesos, conjunto_x, conjunto_y
-
 
 def criar_grafo_bipartido_completo(m, n):
     """Cria um grafo bipartido completo K(m, n) com dois conjuntos de vértices de tamanhos m e n."""
