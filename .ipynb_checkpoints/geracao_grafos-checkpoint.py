@@ -101,6 +101,25 @@ def grafoSimples():
 
     return G,weights
 
+def gerar_arvore_par(n):
+    """Gera uma árvore aleatória com n vértices (n deve ser par)."""
+    if n % 2 != 0 or n < 2:
+        raise ValueError("O número de vértices deve ser um inteiro par >= 2.")
+    
+    G = nx.Graph()
+    G.add_node("v0")
+    nos_existentes = ["v0"]
+
+    for i in range(1, n):
+        novo_no = f"v{i}"
+        no_conectado = random.choice(nos_existentes)
+        G.add_edge(novo_no, no_conectado)
+        nos_existentes.append(novo_no)
+
+    pesos = {node: random.randint(1, 10) for node in G.nodes()}
+    imprimirArvoreEnraizada(G, pesos)
+    return G, pesos
+
 
 def arvoreCompleta(h: int):
     """Gera uma árvore completa de altura h."""
@@ -128,5 +147,5 @@ def arvoreCompleta(h: int):
     
     pesos = {node: random.randint(1, 10) for node in G.nodes()}
 
-    imprimirArvoreCompleta(G,pesos)
+    imprimirArvoreEnraizada(G,pesos)
     return G, pesos

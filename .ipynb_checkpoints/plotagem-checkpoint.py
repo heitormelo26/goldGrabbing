@@ -79,7 +79,7 @@ def plotar_grafo_bipartido(G, conjunto_x, conjunto_y, pesos, title="Grafo Bipart
 
 
     
-def imprimirArvoreCompleta(G,pesos):
+def imprimirArvoreEnraizada(G,pesos):
     """Plota a árvore gerada com hierarquia de altura."""
     pos = {}
     nivel_map = {}  # Dicionário para armazenar a posição dos nós em cada nível
