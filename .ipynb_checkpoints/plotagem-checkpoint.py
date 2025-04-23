@@ -130,7 +130,7 @@ def plotar_evolucao_memo(logs_memo, logs_memoKmn):
 
     if logs_memoKmn:
         tempos2, tamanhos2 = zip(*logs_memoKmn)
-        plt.plot(tempos2, tamanhos2, marker='s', linestyle='--', label='Memo KMN', color='green')
+        plt.plot(tempos2, tamanhos2, marker='s', linestyle='--', label='Memo Otimizado', color='green')
         pico2 = max(logs_memoKmn, key=lambda x: x[1])
         plt.annotate(f'Pico: {pico2[1]} bytes\n({pico2[0]:.2f}s)',
                      xy=pico2, xytext=(pico2[0], pico2[1]*1.1),
@@ -165,7 +165,7 @@ def plotar_evolucaoQtdEstados_memo(logs_memo, logs_memoKmn):
 
     if logs_memoKmn:
         tempos2, tamanhos2 = zip(*logs_memoKmn)
-        plt.plot(tempos2, tamanhos2, marker='s', linestyle='--', label='Memo KMN', color='green')
+        plt.plot(tempos2, tamanhos2, marker='s', linestyle='--', label='Memo Otimizado', color='green')
         pico2 = max(logs_memoKmn, key=lambda x: x[1])
         plt.annotate(f'Pico: {pico2[1]} estados\n({pico2[0]:.2f}s)',
                      xy=pico2, xytext=(pico2[0], pico2[1]*1.1),

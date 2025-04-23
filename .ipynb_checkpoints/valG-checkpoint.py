@@ -231,6 +231,88 @@ def valor_dp_bipartido(grafo: nx.Graph, pesos: dict, memo=None,m =0 ,n = 0,inici
 #===============================================================================================================================#
 
 
+#===============================================================================================================================#
+
+def valor_dp_caminho(grafo: nx.Graph, pesos: dict, primeirosVerticesNaoViaveis,memo=None,inicio_tempo = 0, profundidade=0, history=()):
+    global contagem_reuso_dp, estados_reusados, estados_na_tabela,relacao
+
+    if memo is None:
+        memo = {}
+
+    estado = tuple(grafo.nodes)
+
+    if estado in memo:
+        registrar_tamanho_memoKmn(memo, inicio_tempo)
+        registrar_qtdEstados_memoKmn(memo, inicio_tempo)
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        contagem_reuso_dp.append(estado)
+
+        valor, caminho = memo[estado]
+        memo[estado] = (valor, caminho)  
+
+        if estado not in estados_reusados:
+            estados_reusados[estado] = {'count': 0, 'timestamps': [],'historico': []}
+
+        estados_reusados[estado]['count'] += 1
+        estados_reusados[estado]['timestamps'].append(history)
+        estados_reusados[estado]['historico'].append(history)
+
+        estadoCopia = memo[estado]
+
+        print("Estado deletado: ",estado)
+        del memo[estado]
+
+
+        return estadoCopia[0],estadoCopia[1]
+
+    
+    if not grafo.nodes:
+        return 0, []
+
+    melhor_valor = float('-inf')
+    melhor_caminho = []
+    #arvore_decisao = []
+
+    for v in list(grafo.nodes):
+        if eh_viavel(grafo, v):
+            grafo_copia = grafo.copy()
+            grafo_copia.remove_node(v)
+            novo_history = history + (v,)
+            valor_subgrafo , sub_melhor_caminho = valor_dp_caminho(grafo_copia, pesos, primeirosVerticesNaoViaveis,memo,inicio_tempo, profundidade + 1, novo_history)
+            valor_atual = pesos[v] - valor_subgrafo
+
+            #arvore_decisao.append((v, valor_atual, sub_arvore_decisao))
+
+            if valor_atual > melhor_valor:
+                melhor_valor = valor_atual
+                melhor_caminho = [v] + sub_melhor_caminho
+            registrar_tamanho_memoKmn(memo, inicio_tempo)
+            registrar_qtdEstados_memoKmn(memo, inicio_tempo)
+
+            if len(grafo.nodes) > 1:
+               eh_sc = eh_subconjunto_caminho(grafo,grafo.nodes,primeirosVerticesNaoViaveis)
+               if eh_sc:
+                 memo[estado] = (melhor_valor, melhor_caminho)
+                 estados_na_tabela.add(estado)    
+            
+            # if len(grafo.nodes) > 1:
+            #     if estado in memo:
+            #         valorAux = memo[estado][0]
+            #         if valorAux < melhor_valor:
+            #             memo[estado] = (melhor_valor, melhor_caminho)
+            #             estados_na_tabela.add(estado)
+            #     else:
+            #         memo[estado] = (melhor_valor, melhor_caminho)
+            #         estados_na_tabela.add(estado)
+                    
+                #print(f"Adiconou o estado: {estado}")
+               
+
+    return melhor_valor, melhor_caminho
+
+
+#===============================================================================================================================#
+
 def valor_dp_otimizado_caminho(grafo: nx.Graph, pesos: dict, primeirosVerticesNaoViaveis, memo=None, profundidade=0, history=()):
     global contagem_reuso_dp, estados_reusados, estados_na_tabela
 
@@ -240,7 +322,6 @@ def valor_dp_otimizado_caminho(grafo: nx.Graph, pesos: dict, primeirosVerticesNa
     estado = tuple(grafo.nodes)
 
     if estado in memo:
-        print("REUSOOOOOOUUUUUUUUUUUUUUUUUUUU")
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         contagem_reuso_dp.append(estado)
 
