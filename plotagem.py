@@ -111,6 +111,8 @@ def imprimirArvoreEnraizada(G,pesos):
     plt.show()
 
 def plotar_evolucao_memo(logs_memo, logs_memoKmn):
+    plt.tight_layout()
+
     """
     Plota a evolução do tamanho do memo ao longo do tempo para dois conjuntos de logs.
     """
@@ -118,11 +120,11 @@ def plotar_evolucao_memo(logs_memo, logs_memoKmn):
         print("Nenhum log de memória foi registrado.")
         return
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 8))
 
     if logs_memo:
         tempos1, tamanhos1 = zip(*logs_memo)
-        plt.plot(tempos1, tamanhos1, marker='o', linestyle='-', label='Memo Padrão', color='blue')
+        plt.plot(tempos1, tamanhos1, marker='', linestyle='-', label='PD padrão', color='blue')
         pico1 = max(logs_memo, key=lambda x: x[1])
         plt.annotate(f'Pico: {pico1[1]} bytes\n({pico1[0]:.2f}s)',
                      xy=pico1, xytext=(pico1[0], pico1[1]*1.1),
@@ -130,7 +132,7 @@ def plotar_evolucao_memo(logs_memo, logs_memoKmn):
 
     if logs_memoKmn:
         tempos2, tamanhos2 = zip(*logs_memoKmn)
-        plt.plot(tempos2, tamanhos2, marker='s', linestyle='--', label='Memo Otimizado', color='green')
+        plt.plot(tempos2, tamanhos2, marker='', linestyle='-', label='PD otimizado', color='green')
         pico2 = max(logs_memoKmn, key=lambda x: x[1])
         plt.annotate(f'Pico: {pico2[1]} bytes\n({pico2[0]:.2f}s)',
                      xy=pico2, xytext=(pico2[0], pico2[1]*1.1),
@@ -138,12 +140,19 @@ def plotar_evolucao_memo(logs_memo, logs_memoKmn):
 
     plt.xlabel('Tempo decorrido (s)')
     plt.ylabel('Tamanho do memo (bytes)')
-    plt.title('Evolução do uso de memória do memo')
+    #plt.title('Evolução do uso de memória do memo')
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
+    plt.title("Evolução da Ocupação da Tabela PD(Bytes)")
+    
+    # Salvar como imagem PNG
+    plt.savefig('evolucao-tabela-pd-bytes.png', format="png", dpi=300, bbox_inches="tight")
+    
+    # Opcional: exibe a imagem
     plt.show()
 
+import matplotlib.pyplot as plt
 
 def plotar_evolucaoQtdEstados_memo(logs_memo, logs_memoKmn):
     """
@@ -153,31 +162,46 @@ def plotar_evolucaoQtdEstados_memo(logs_memo, logs_memoKmn):
         print("Nenhum log de memória foi registrado.")
         return
 
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(14, 10))  # Sem constrained_layout
 
     if logs_memo:
         tempos1, tamanhos1 = zip(*logs_memo)
-        plt.plot(tempos1, tamanhos1, marker='o', linestyle='-', label='Memo Padrão', color='blue')
+        ax.plot(tempos1, tamanhos1, linestyle='-', label='PD Padrão', color='blue')
         pico1 = max(logs_memo, key=lambda x: x[1])
-        plt.annotate(f'Pico: {pico1[1]} estados\n({pico1[0]:.2f}s)',
-                     xy=pico1, xytext=(pico1[0], pico1[1]*1.1),
-                     arrowprops=dict(facecolor='blue', shrink=0.05))
+        ax.annotate(
+            f'Pico: {pico1[1]} estados\n({pico1[0]:.4f}s)',
+            xy=pico1,
+            xytext=(pico1[0], pico1[1] + 5),  # Ajuste vertical seguro
+            arrowprops=dict(facecolor='blue', shrink=0.05),
+            fontsize=18,
+            ha='center',
+            va='bottom'
+        )
 
     if logs_memoKmn:
         tempos2, tamanhos2 = zip(*logs_memoKmn)
-        plt.plot(tempos2, tamanhos2, marker='s', linestyle='--', label='Memo Otimizado', color='green')
+        ax.plot(tempos2, tamanhos2, linestyle='-', label='PD Otimizado', color='green')
         pico2 = max(logs_memoKmn, key=lambda x: x[1])
-        plt.annotate(f'Pico: {pico2[1]} estados\n({pico2[0]:.2f}s)',
-                     xy=pico2, xytext=(pico2[0], pico2[1]*1.1),
-                     arrowprops=dict(facecolor='green', shrink=0.05))
+        print(pico2)
+        ax.annotate(
+            f'Pico: {pico2[1]} estados\n({pico2[0]:.4f}s) Estado {pico2[2]}',
+            xy=pico2,
+            xytext=(pico2[0], pico2[1] + 5),  # Mesmo posicionamento seguro
+            arrowprops=dict(facecolor='green', shrink=0.05),
+            fontsize=18,
+            ha='center',
+            va='bottom'
+        )
 
-    plt.xlabel('Tempo decorrido (s)')
-    plt.ylabel('Tamanho do memo (un.)')
-    plt.title('Evolução do tamanho do memo')
-    plt.grid(True)
-    plt.legend()
+    ax.set_xlabel('Tempo decorrido (s)', fontsize=20)
+    ax.set_ylabel('Tamanho tabela PD (un.)', fontsize=20)
+    ax.tick_params(axis='both', labelsize=14)
+    ax.grid(True)
+    ax.legend(fontsize=14)
+
     plt.tight_layout()
     plt.show()
+
 
 def imprimirArvoreDecisao(arvore_decisao, comDP=True, nome_arquivo="arvore_decisao.png"):
     arvore_plotada, pos, counter = plotarArvoreDeDecisao(arvore_decisao, comDP)

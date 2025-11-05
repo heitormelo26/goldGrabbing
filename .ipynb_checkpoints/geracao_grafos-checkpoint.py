@@ -93,11 +93,11 @@ def criar_grafo_bipartido_completo(m, n):
 
 def grafoSimples():
     G = nx.Graph()
-    edges = [('v1', 'v2'), ('v2', 'v3'), ('v3', 'v4')]
-    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+    #edges = [('v1', 'v2'), ('v2', 'v3'), ('v3', 'v4'),('v4', 'v5'),('v5', 'v6')]
+    edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
 
     G.add_edges_from(edges)
-    weights = {'v1': 5, 'v2': 4, 'v3': 1, 'v4': 3}
+    weights = {'v1': 5, 'v2':4, 'v3': 1, 'v4': 3}
 
     return G,weights
 

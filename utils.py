@@ -43,6 +43,32 @@ def verticesViaveis(grafo: nx.Graph):
     return verticesViaveis
 
 
+def eh_viavel_completo(grafo: nx.Graph, v: int) -> bool:
+    if len(grafo.nodes) == 1:
+        return True
+
+    grafo_copia = grafo.copy()
+    grafo_copia.remove_node(v)
+
+    if not grafo_copia.nodes:
+        return True
+
+    # BFS interna
+    visitados = set()
+    origem = next(iter(grafo_copia.nodes))
+    fila = deque([origem])
+
+    while fila:
+        atual = fila.popleft()
+        if atual not in visitados:
+            visitados.add(atual)
+            for vizinho in grafo_copia.neighbors(atual):
+                if vizinho not in visitados:
+                    fila.append(vizinho)
+
+    return len(visitados) == len(grafo_copia.nodes)
+
+
 ## O(n²)
 def gerar_subconjuntos_maior_que_1(nos):
     """
