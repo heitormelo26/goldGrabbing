@@ -105,7 +105,7 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, inicio_tempo= 0,profundida
         memo = {}
 
     estado = tuple(grafo.nodes)
-
+    print("aaaa")
     if estado in memo:
         registrar_tamanho_memo(memo, inicio_tempo)
         registrar_qtdEstados(memo, inicio_tempo)
