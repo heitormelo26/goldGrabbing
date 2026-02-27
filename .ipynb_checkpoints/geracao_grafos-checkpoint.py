@@ -149,3 +149,75 @@ def arvoreCompleta(h: int):
 
     imprimirArvoreEnraizada(G,pesos)
     return G, pesos
+
+
+
+def grafoSimples():
+    G = nx.Graph()
+    edges = [('v1', 'v2'), ('v2', 'v3'), ('v3', 'v4')]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'v1': 5, 'v2': 4, 'v3': 1, 'v4': 3}
+
+    return G,weights
+
+def p4():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c'),('c', 'd')]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'a': 1, 'b': 3, 'c': 5, 'd':1}
+
+    return G,weights
+
+def estrela():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c'), ('b', 'd'), ('b', 'e')]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'a': 4, 'b': 15, 'c': 7,'d': 3,'e':6}
+
+    return G,weights
+
+def c4():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c'),('c', 'd'), ('a','d') ]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'a': 3, 'b': 5, 'c': 1,'d': 4}
+
+    return G,weights
+
+def teste():
+    G = nx.Graph()
+    edges = [('b', 'a'), ('e', 'a'),('e', 'g'),('e', 'f') ]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'a': 10, 'e': 11, 'b': 9,'f':1, 'g':1}
+
+    return G,weights
+
+def w3():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c'),('a', 'c'),('a', 'd'), ('b', 'd'),('c', 'd') ]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'a': 3, 'b': 5, 'c': 1,'d':2}
+
+    return G,weights
+
+def k3():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c'),('a', 'c') ]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'a': 3, 'b': 5, 'c': 1}
+
+    return G,weights
