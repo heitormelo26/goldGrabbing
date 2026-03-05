@@ -172,6 +172,23 @@ def p4():
 
     return G,weights
 
+def p5_Contraexemplo_PreservaVencedor():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c'), ('c', 'd'), ('d', 'e')]
+    G.add_edges_from(edges)
+    weights = {'a': 1, 'b': 2, 'c': 3, 'd': 1, 'e': 2}
+    return G, weights
+
+def p3():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c')]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'a': 5, 'b': 4, 'c': 3}
+
+    return G,weights
+
 def estrela():
     G = nx.Graph()
     edges = [('a', 'b'), ('b', 'c'), ('b', 'd'), ('b', 'e')]
@@ -221,3 +238,22 @@ def k3():
     weights = {'a': 3, 'b': 5, 'c': 1}
 
     return G,weights
+
+
+def adicionar_pendentes_nulos(G, weights):
+    """
+    Dado um grafo G, retorna um novo grafo G' onde cada vértice original
+    recebe um vértice pendente (folha) adicional com peso 0.
+
+    Exemplo: se G tem vértices {a, b, c}, G' terá os vértices originais
+    mais {a', b', c'}, cada um conectado apenas ao seu vértice original.
+    """
+    G_novo = G.copy()
+    novos_pesos = dict(weights)
+
+    for v in list(G.nodes()):
+        pendente = f"{v}'"
+        G_novo.add_edge(v, pendente)
+        novos_pesos[pendente] = 0
+
+    return G_novo, novos_pesos

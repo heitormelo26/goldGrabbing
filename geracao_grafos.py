@@ -172,6 +172,13 @@ def p4():
 
     return G,weights
 
+def p5_Contraexemplo_PreservaVencedor():
+    G = nx.Graph()
+    edges = [('a', 'b'), ('b', 'c'), ('c', 'd'), ('d', 'e')]
+    G.add_edges_from(edges)
+    weights = {'a': 1, 'b': 2, 'c': 3, 'd': 1, 'e': 2}
+    return G, weights
+
 def p3():
     G = nx.Graph()
     edges = [('a', 'b'), ('b', 'c')]
