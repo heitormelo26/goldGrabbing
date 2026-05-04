@@ -15,6 +15,33 @@ def gerar_grafo_caminho(n):
     pesos = {v: random.randint(1, n) for v in nos}
     plot_graph(G, pesos, "Grafo Caminho Ponderado")
     return G, pesos
+    
+def book(n, wa=None, wb=None):
+    """
+    Gera um grafo Book com n vértices.
+
+    Parâmetros:
+        n: número total de vértices (n >= 3)
+        wa: peso do centro a (None = aleatório 1-10)
+        wb: peso do centro b (None = aleatório 1-10)
+
+    Retorna:
+        G: grafo networkx
+        weights: dicionário de pesos
+    """
+    k = n - 2
+    G = nx.Graph()
+    G.add_edge('a', 'b')
+    for i in range(k):
+        G.add_edge('a', f'p{i}')
+        G.add_edge('b', f'p{i}')
+    weights = {v: random.randint(1, 10) for v in G.nodes}
+    if wa is not None:
+        weights['a'] = wa
+    if wb is not None:
+        weights['b'] = wb
+    plot_graph(G, weights, "Grafo Book")
+    return G, weights
 
 def gerar_grafo_ciclo(n):
     G = nx.cycle_graph(n)
@@ -30,6 +57,55 @@ def gerar_grafo_completo(n):
     random.shuffle(nos)
     pesos = {v: random.randint(1, n) for v in nos}
     plot_graph(G, pesos, "Grafo Completo Ponderado")
+    return G, pesos
+def gerar_contraexemplo_barbell():
+    """
+    Gera o contraexemplo B(3) onde a gulosa falha:
+    duas K_3 unidas por ponte a1-b1, com pesos que fazem
+    a gulosa escolher subotimamente no turno 3.
+
+    val(G) = 5, mas gulosa produz diff = 1 (perda de 4).
+    """
+    G = nx.Graph()
+    edges = [
+        ('a1', 'a2'), ('a1', 'a3'), ('a2', 'a3'),  # K_3 do lado A
+        ('b1', 'b2'), ('b1', 'b3'), ('b2', 'b3'),  # K_3 do lado B
+        ('a1', 'b1')                                # ponte
+    ]
+    G.add_edges_from(edges)
+    pesos = {'a1': 1, 'a2': 2, 'a3': 4, 'b1': 5, 'b2': 3, 'b3': 6}
+    return G, pesos
+
+def gerar_grafo_barbell(n1, n2):
+    """
+    Gera um grafo barbell com duas cliques de tamanhos n1 e n2 unidas por uma aresta-ponte.
+    Cliques: a1..a_{n1} e b1..b_{n2}. Ponte: a1-b1.
+    """
+    G = nx.Graph()
+    A = [f"a{i}" for i in range(1, n1 + 1)]
+    B = [f"b{i}" for i in range(1, n2 + 1)]
+
+    # K_{n1} sobre A
+    for i in range(n1):
+        for j in range(i + 1, n1):
+            G.add_edge(A[i], A[j])
+
+    # K_{n2} sobre B
+    for i in range(n2):
+        for j in range(i + 1, n2):
+            G.add_edge(B[i], B[j])
+
+    # Garante que vértices isolados (caso n=1) sejam adicionados
+    for v in A + B:
+        G.add_node(v)
+
+    # Ponte
+    G.add_edge(A[0], B[0])
+
+    nos = list(G.nodes())
+    random.shuffle(nos)
+    pesos = {v: random.randint(1, n1 + n2) for v in nos}
+    plot_graph(G, pesos, f"Grafo Barbell ({n1}, {n2}) Ponderado")
     return G, pesos
 
 def criar_grafo_bipartido(m, n):
@@ -172,6 +248,19 @@ def p4():
 
     return G,weights
 
+
+def p2():
+    G = nx.Graph()
+    edges = [('p0', 'p1') ]
+    #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
+
+    G.add_edges_from(edges)
+    weights = {'p0': 100, 'p1': 150}
+
+    return G,weights
+
+    return G,weights
+
 def p5_Contraexemplo_PreservaVencedor():
     G = nx.Graph()
     edges = [('a', 'b'), ('b', 'c'), ('c', 'd'), ('d', 'e')]
@@ -201,11 +290,11 @@ def estrela():
 
 def c4():
     G = nx.Graph()
-    edges = [('a', 'b'), ('b', 'c'),('c', 'd'), ('a','d') ]
+    edges = [('c0', 'c1'), ('c1', 'c2'),('c2', 'c3'), ('c0','c3') ]
     #edges = [('v4', 'v3'), ('v3', 'v2'), ('v2', 'v1')]
 
     G.add_edges_from(edges)
-    weights = {'a': 3, 'b': 5, 'c': 1,'d': 4}
+    weights = {'c0': 100, 'c1': 1, 'c2': 100,'c3': 150}
 
     return G,weights
 
@@ -218,6 +307,18 @@ def teste():
     weights = {'a': 10, 'e': 11, 'b': 9,'f':1, 'g':1}
 
     return G,weights
+
+def w5_contraexemplo():
+    G = nx.Graph()
+    edges = [
+        # Hub conectado a todos os vértices do ciclo
+        ('h', 'v1'), ('h', 'v2'), ('h', 'v3'), ('h', 'v4'), ('h', 'v5'),
+        # Ciclo v1-v2-v3-v4-v5-v1
+        ('v1', 'v2'), ('v2', 'v3'), ('v3', 'v4'), ('v4', 'v5'), ('v5', 'v1')
+    ]
+    G.add_edges_from(edges)
+    weights = {'h': 4, 'v1': 1, 'v2': 5, 'v3': 6, 'v4': 2, 'v5': 7}
+    return G, weights
 
 def w3():
     G = nx.Graph()
@@ -257,3 +358,89 @@ def adicionar_pendentes_nulos(G, weights):
         novos_pesos[pendente] = 0
 
     return G_novo, novos_pesos
+
+
+
+
+def fig3_egawa():
+    G = nx.Graph()
+    # Ciclo C6: v(B) - c1(W) - c2(B) - c3(W) - c4(B) - c5(W)
+    edges = [
+        ('v', 'c1'), ('c1', 'c2'), ('c2', 'c3'),
+        ('c3', 'c4'), ('c4', 'c5'), ('c5', 'v')
+    ]
+    # c1: P1 (1 pendente)
+    edges.append(('c1', 'a1'))
+    # c2: P2 (2 pendentes)
+    edges += [('c2', 'b1'), ('b1', 'b2')]
+    # c3: P4 (4 pendentes — caminho longo no topo)
+    edges += [('c3', 'd1'), ('d1', 'd2'), ('d2', 'd3'), ('d3', 'd4')]
+    # c4: P2 (2 pendentes)
+    edges += [('c4', 'e1'), ('e1', 'e2')]
+    # c5: P1 (1 pendente)
+    edges.append(('c5', 'f1'))
+
+    G.add_edges_from(edges)
+    weights = {v: 0 for v in G.nodes}
+    weights['c1'] = 1   # branco peso 1 (esquerda do ciclo)
+    weights['c5'] = 1   # branco peso 1 (direita do ciclo)
+    weights['d2'] = 1   # branco peso 1 (topo, meio do P4)
+    plot_graph(G, weights, "C6-tree Egwa")
+
+    return G, weights
+
+
+def unir_por_ponte(G1, weights1, G2, weights2, u=None, v=None):
+    """
+    Une dois grafos G1 e G2 por uma única aresta (ponte).
+
+    Parâmetros:
+        G1, G2: grafos networkx
+        weights1, weights2: dicionários de pesos {vértice: peso}
+        u: vértice de G1 para a ponte (None = aleatório)
+        v: vértice de G2 para a ponte (None = aleatório)
+
+    Retorna:
+        G3: grafo unido
+        weights3: pesos do grafo unido
+        (u, v): vértices usados na ponte
+    """
+
+    # Verifica se há conflito de nomes
+    intersecao = set(G1.nodes()) & set(G2.nodes())
+
+    print(intersecao)
+    if intersecao:
+        # Só renomeia se houver conflito
+        mapping = {node: f"{node}_g2" for node in G2.nodes()}
+        G2_renamed = nx.relabel_nodes(G2, mapping)
+        weights2_renamed = {mapping[k]: val for k, val in weights2.items()}
+    else:
+        # Mantém como está
+        mapping = {node: node for node in G2.nodes()}
+        G2_renamed = G2
+        weights2_renamed = weights2.copy()
+        
+    # Escolher vértices da ponte
+    if u is None:
+        u = random.choice(list(G1.nodes()))
+
+    if v is None:
+        v_original = random.choice(list(G2.nodes()))
+        v = mapping[v_original]
+    else:
+        v = mapping.get(v, v)
+
+    # Construir grafo unido
+    G3 = nx.compose(G1, G2_renamed)
+    G3.add_edge(u, v)
+
+    # Combinar pesos
+    weights3 = {}
+    weights3.update(weights1)
+    weights3.update(weights2_renamed)
+    print(weights1)
+    print(weights2_renamed)
+    plot_graph(G3, weights3, "Uniao dos grafos")
+
+    return G3, weights3, (u, v)
