@@ -74,6 +74,8 @@ def gerar_contraexemplo_barbell():
     ]
     G.add_edges_from(edges)
     pesos = {'a1': 1, 'a2': 2, 'a3': 4, 'b1': 5, 'b2': 3, 'b3': 6}
+    plot_graph(G, pesos, "Contraexemplo guloso Barbell")
+
     return G, pesos
 
 def gerar_grafo_barbell(n1, n2):
