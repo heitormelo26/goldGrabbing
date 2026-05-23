@@ -78,6 +78,58 @@ def gerar_contraexemplo_barbell():
 
     return G, pesos
 
+def gerar_grafo_threshold(sequencia_papeis, sequencia_pesos):
+    """
+    Gera um grafo threshold a partir de uma sequência construtiva.
+
+    Parâmetros:
+        sequencia_papeis: string ou lista de caracteres. 
+                          'i' para isolado (independente), 
+                          'u' para universal (dominante/clique).
+                          Exemplo: 'iuui'
+        sequencia_pesos: lista de pesos correspondente a cada vértice.
+                         Exemplo: [5, 10, 3, 8]
+
+    Retorna:
+        G: grafo networkx estruturado como threshold
+        pesos: dicionário de pesos {vértice: peso}
+    """
+    if len(sequencia_papeis) != len(sequencia_pesos):
+        raise ValueError("A sequência de papéis e a lista de pesos devem ter exatamente o mesmo tamanho.")
+
+    G = nx.Graph()
+    pesos = {}
+
+    for idx, (papel, peso) in enumerate(zip(sequencia_papeis, sequencia_pesos)):
+        papel = papel.lower()
+        # Nomeia o vértice indicando seu papel e a ordem de inserção (ex: i0, u1, u2, i3)
+        nome_vertice = f"{papel}{idx}" 
+        
+        # Adiciona o nó ao grafo
+        G.add_node(nome_vertice)
+        pesos[nome_vertice] = peso
+
+        # Se não for o primeiro vértice da construção, aplicamos a regra de arestas
+        if idx > 0:
+            if papel == 'u':
+                # Vértice Universal: conecta-se a TODOS os vértices que já estão no grafo
+                arestas = [(nome_vertice, v) for v in G.nodes() if v != nome_vertice]
+                G.add_edges_from(arestas)
+            elif papel == 'i':
+                # Vértice Isolado: entra no grafo, mas não cria nenhuma aresta nova
+                pass
+            else:
+                raise ValueError(f"Papel desconhecido '{papel}'. Use apenas 'i' (isolado) ou 'u' (universal).")
+
+    # Utiliza a sua função de plotagem já existente no script
+    try:
+        plot_graph(G, pesos, f"Grafo Threshold ({sequencia_papeis})")
+    except NameError:
+        print("Função plot_graph não encontrada. Plotagem ignorada.")
+
+    return G, pesos
+
+
 def gerar_grafo_barbell(n1, n2):
     """
     Gera um grafo barbell com duas cliques de tamanhos n1 e n2 unidas por uma aresta-ponte.
