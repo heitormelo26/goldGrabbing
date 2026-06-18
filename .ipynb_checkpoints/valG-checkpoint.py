@@ -105,7 +105,7 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, inicio_tempo= 0,profundida
         memo = {}
 
     estado = tuple(grafo.nodes)
-    print("aaaa")
+    #print("aaaa")
     if estado in memo:
         registrar_tamanho_memo(memo, inicio_tempo)
         registrar_qtdEstados(memo, inicio_tempo)
@@ -125,7 +125,7 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, inicio_tempo= 0,profundida
         return 0, []
 
     melhor_valor = float('-inf')
-    melhor_caminho = []
+    melhor_caminho = [[]]
     arvore_decisao = []
 
     for v in list(grafo.nodes):
@@ -142,7 +142,7 @@ def valor_dp(grafo: nx.Graph, pesos: dict, memo=None, inicio_tempo= 0,profundida
             if valor_atual > melhor_valor:
                 melhor_valor = valor_atual
                 melhor_caminho = [v] + sub_melhor_caminho
-
+            
             if len(grafo.nodes) > 1:
                 memo[estado] = (melhor_valor, melhor_caminho)
                 estados_na_tabela.add(estado)

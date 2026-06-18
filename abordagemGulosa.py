@@ -35,7 +35,7 @@ def abordagemGulosa(G, weights, verbose=True):
 
     if verbose:
         print("=" * 50)
-        print("JOGO: Estratégia Gulosa vs Gulosa")
+        print("Estratégia Gulosa")
         print("=" * 50)
         print(f"Grafo inicial: {sorted(G.nodes())}")
         print(f"Pesos: {weights}")

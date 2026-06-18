@@ -100,10 +100,22 @@ def gerar_grafo_threshold(sequencia_papeis, sequencia_pesos):
     G = nx.Graph()
     pesos = {}
 
+    # Inicializa os contadores independentes por tipo de vértice começando em 1
+    count_i = 1
+    count_u = 1
+
     for idx, (papel, peso) in enumerate(zip(sequencia_papeis, sequencia_pesos)):
         papel = papel.lower()
-        # Nomeia o vértice indicando seu papel e a ordem de inserção (ex: i0, u1, u2, i3)
-        nome_vertice = f"{papel}{idx}" 
+        
+        # Determina o nome do vértice com base no seu tipo e incrementa o respectivo contador
+        if papel == 'i':
+            nome_vertice = f"i{count_i}"
+            count_i += 1
+        elif papel == 'u':
+            nome_vertice = f"u{count_u}"
+            count_u += 1
+        else:
+            raise ValueError(f"Papel desconhecido '{papel}'. Use apenas 'i' (isolado) ou 'u' (universal).")
         
         # Adiciona o nó ao grafo
         G.add_node(nome_vertice)
@@ -118,8 +130,6 @@ def gerar_grafo_threshold(sequencia_papeis, sequencia_pesos):
             elif papel == 'i':
                 # Vértice Isolado: entra no grafo, mas não cria nenhuma aresta nova
                 pass
-            else:
-                raise ValueError(f"Papel desconhecido '{papel}'. Use apenas 'i' (isolado) ou 'u' (universal).")
 
     # Utiliza a sua função de plotagem já existente no script
     try:

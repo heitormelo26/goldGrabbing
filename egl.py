@@ -43,9 +43,12 @@ def net_gain_move(G, weights):
         next_valid = set(find_non_cut_vertices(G_temp))
         
         # 3. Conjunto de Desbloqueio U(v): quem é viável agora, mas não era antes?
-        unlocked = next_valid - current_valid
+        #unlocked = next_valid - current_valid
+        #Agora ve todos os que são viáveis não apenas os que se tornaram
+        #unlocked = current_valid
+        unlocked = next_valid
         
-        # 4. Custo(v): o maior peso entre os vértices desbloqueados
+        # 4. Custo(v): o maior peso entre os vértices vivaveis
         if unlocked:
             cost = max(weights[u] for u in unlocked)
         else:
@@ -81,7 +84,7 @@ def abordagemEGL(G, weights, verbose=True):
 
     if verbose:
         print("=" * 60)
-        print("JOGO: Estratégia de Ganho Líquido (EGL) vs EGL")
+        print("JOGO: Estratégia de Ganho Líquido (EGL)")
         print("=" * 60)
         print(f"Grafo inicial: {sorted(G.nodes())}")
         print(f"Pesos: {weights}\n")
