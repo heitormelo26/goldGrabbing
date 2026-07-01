@@ -32,6 +32,59 @@ def eh_viavel(grafo: nx.Graph, v: int) -> bool:
     grafo_copia.remove_node(v)
     return nx.is_connected(grafo_copia) if grafo_copia.nodes else True
 
+
+import networkx as nx
+
+
+def removeGemos(grafo, pesos, apenas_isopesos=True):
+    """
+    Remove gemos por paridade: em cada classe de gemos, mantem 2 representantes
+    se a classe for par e 3 se for impar (remove sempre um numero par de vertices).
+
+    Agrupa gemos VERDADEIROS e FALSOS (relacao unificada N(u)\\{v} == N(v)\\{u}),
+    entao funciona tanto para o conjunto independente quanto para a clique.
+
+    Parametros:
+        apenas_isopesos : True  -> so remove de classes com todos os pesos iguais.
+                          False -> remove de qualquer classe, mantendo os maiores.
+
+    Uso: grafo2, pesos2 = removeGemos(grafo, pesos, apenas_isopesos=True)
+    """
+    G = grafo.copy()
+    w = dict(pesos)
+
+    # particiona em classes de gemos pela relacao unificada
+    nao_atribuidos = set(grafo.nodes())
+    classes = []
+    for v in grafo.nodes():
+        if v not in nao_atribuidos:
+            continue
+        classe = [v]
+        nao_atribuidos.discard(v)
+        Nv = set(grafo.neighbors(v))
+        for u in list(nao_atribuidos):
+            Nu = set(grafo.neighbors(u))
+            if (Nu - {v}) == (Nv - {u}):        # gemos verdadeiros OU falsos
+                classe.append(u)
+                nao_atribuidos.discard(u)
+        classes.append(classe)
+
+    for classe in classes:
+        if len(classe) < 2:
+            continue
+        if apenas_isopesos and len({pesos[v] for v in classe}) != 1:
+            continue
+        tam = len(classe)
+        manter = 2 if tam % 2 == 0 else 3
+        if manter >= tam:
+            continue
+        ordenada = sorted(classe, key=lambda v: pesos[v], reverse=True)
+        for v in ordenada[manter:]:             # remove os excedentes (menores pesos)
+            G.remove_node(v)
+            w.pop(v, None)
+
+    return G, w
+
 def verticesViaveis(grafo: nx.Graph): 
     verticesViaveis = []
     for v in grafo.nodes:
