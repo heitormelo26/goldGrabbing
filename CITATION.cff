@@ -1,1 +1,70 @@
-
+cff-version: 1.2.0
+message: >-
+  Se você utilizar este software, cite a dissertação indicada em
+  "preferred-citation". Para citar o código em si, use os metadados abaixo.
+type: software
+title: "goldGrabbing: abordagens computacionais para o Gold Grabbing Game"
+abstract: >-
+  Implementação das abordagens computacionais estudadas na dissertação
+  "Abordagens Computacionais para o Gold Grabbing Game": estratégia ótima por
+  busca exaustiva (val(G)), programação dinâmica com otimizações de memória
+  para grafos caminho e bipartido completo, heurística gulosa, estratégia por
+  bicoloração para caminhos e ciclos, geradores de famílias de grafos,
+  transformações (composição por ponte, subdivisão losango, expansão nula) e
+  rotinas de medição e visualização.
+authors:
+  - family-names: "Brandão"
+    given-names: "Heitor Melo de Lucas"
+    affiliation: "Instituto de Informática, Universidade Federal de Goiás"
+    city: "Goiânia"
+    region: "GO"
+    country: "BR"
+repository-code: "https://github.com/heitormelo26/goldGrabbing"
+url: "https://github.com/heitormelo26/goldGrabbing"
+version: "1.0.0"
+date-released: "2026-10-06"
+keywords:
+  - "Gold Grabbing Game"
+  - "Graph Grabbing Game"
+  - "jogos combinatórios em grafos"
+  - "estratégia vencedora"
+  - "estratégia ótima"
+  - "programação dinâmica"
+  - "algoritmos gulosos"
+  - "bicoloração"
+  - "teoria dos grafos"
+preferred-citation:
+  type: thesis
+  thesis-type: "Dissertação de Mestrado"
+  title: "Abordagens Computacionais para o Gold Grabbing Game"
+  authors:
+    - family-names: "Brandão"
+      given-names: "Heitor Melo de Lucas"
+      affiliation: "Instituto de Informática, Universidade Federal de Goiás"
+  institution:
+    name: "Instituto de Informática, Universidade Federal de Goiás"
+    city: "Goiânia"
+    region: "GO"
+    country: "BR"
+  year: 2026
+  month: 11
+  languages:
+    - pt
+  notes: >-
+    Orientador: Hebert Coelho da Silva. Coorientador: Julliano Rosa Nascimento.
+    Código-fonte disponível em https://github.com/heitormelo26/goldGrabbing.
+references:
+  - type: conference-paper
+    title: "Abordagens computacionais para o gold grabbing game"
+    authors:
+      - family-names: "Brandão"
+        given-names: "Heitor Melo de Lucas"
+      - family-names: "Coelho"
+        given-names: "Hebert"
+    conference:
+      name: "LVII Simpósio Brasileiro de Pesquisa Operacional (SBPO 2025)"
+      country: "BR"
+    collection-title: "Anais do LVII Simpósio Brasileiro de Pesquisa Operacional"
+    year: 2025
+    languages:
+      - pt
